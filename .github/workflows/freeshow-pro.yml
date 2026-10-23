@@ -55,7 +55,7 @@ jobs:
                   CSC_IDENTITY_AUTO_DISCOVERY: "false"
               run: |
                   sed -e '/^afterSign:/d' config/building/electron-builder.yaml > config/building/electron-builder-local.yaml
-                  npx electron-builder --config config/building/electron-builder-local.yaml --mac dmg --arm64 --publish never -c.mac.identity=null -c.productName="FreeShow Pro" -c.extraMetadata.productName=FreeShow -c.appId=app.freeshow.pro
+                  npx electron-builder --config config/building/electron-builder-local.yaml --mac dmg --arm64 --publish never -c.mac.identity=- -c.productName="FreeShow Pro" -c.extraMetadata.productName=FreeShow -c.appId=app.freeshow.pro
             - uses: actions/upload-artifact@v4
               with:
                   name: FreeShow-Pro-Mac
