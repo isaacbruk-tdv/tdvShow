@@ -2,6 +2,7 @@
     import { createEventDispatcher } from "svelte"
     import type { MediaStyle } from "../../../types/Main"
     import { cropImageToBase64, encodeFilePath } from "../helpers/media"
+    import { getMediaTransform } from "../helpers/mediaPlacement"
 
     export let path: string
     export let mediaStyle: MediaStyle = {}
@@ -11,7 +12,7 @@
         dispatch("loaded", true)
     }
 
-    $: mediaStyleString = `width: 100%;height: 100%;object-fit: ${mediaStyle.fit === "blur" ? "contain" : mediaStyle.fit || "contain"};filter: ${mediaStyle.filter || ""};transform: scale(${mediaStyle.flipped ? "-1" : "1"}, ${mediaStyle.flippedY ? "-1" : "1"});image-rendering: ${mediaStyle.rendering || "initial"};mix-blend-mode: ${mediaStyle.blend || "normal"};`
+    $: mediaStyleString = `width: 100%;height: 100%;object-fit: ${mediaStyle.fit === "blur" ? "contain" : mediaStyle.fit || "contain"};filter: ${mediaStyle.filter || ""};transform: ${getMediaTransform(mediaStyle)};image-rendering: ${mediaStyle.rendering || "initial"};mix-blend-mode: ${mediaStyle.blend || "normal"};`
     $: mediaStyleBlurString = `position: absolute;filter: ${mediaStyle.filter || ""} blur(${mediaStyle.fitOptions?.blurAmount ?? 6}px) opacity(${mediaStyle.fitOptions?.blurOpacity || 0.3});object-fit: cover;width: 100%;height: 100%;transform: scale(${mediaStyle.flipped ? "-1" : "1"}, ${mediaStyle.flippedY ? "-1" : "1"});image-rendering: ${mediaStyle.rendering || "initial"};`
 
     let croppedImage = ""

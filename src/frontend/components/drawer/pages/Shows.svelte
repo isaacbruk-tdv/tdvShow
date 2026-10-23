@@ -50,8 +50,10 @@
               : showsSorted.filter((s) => profile[s?.category || ""] !== "none" && (active === s.category || (active === "unlabeled" && (s.category === null || !$categories[s.category]))))
 
     export let firstMatch: null | any = null
+    // siempre actualizar aunque el cajon este cerrado (biblioteca del modo ProPresenter)
+    export let alwaysActive = false
 
-    $: drawerIsClosed = $drawer.height <= 40
+    $: drawerIsClosed = !alwaysActive && $drawer.height <= 40
     let shouldUpdate = false
     // update when drawer is opened if it has changes
     $: if (shouldUpdate && !drawerIsClosed) search()

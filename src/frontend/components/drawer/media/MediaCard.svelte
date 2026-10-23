@@ -9,7 +9,7 @@
     import { getKey } from "../../../values/keys"
     import Icon from "../../helpers/Icon.svelte"
     import { getMediaLayerType, getMediaStyle, getMediaType, loadThumbnail } from "../../helpers/media"
-    import { findMatchingOut, getAllActiveOutputs, getFirstActiveOutput, setOutput } from "../../helpers/output"
+    import { findMatchingOut, getAllActiveOutputs, getAllNormalOutputs, getFirstActiveOutput, setOutput } from "../../helpers/output"
     import Button from "../../inputs/Button.svelte"
     import { clearBackground, clearSlide } from "../../output/clear"
     import SelectElem from "../../system/SelectElem.svelte"
@@ -27,6 +27,8 @@
     export let loadFullImage = false
     export let contentProvider: ContentProviderId | false = false
     export let contentFileData: ContentFile | null = null
+    // salidas especificas a las que mandar este medio (franja de fondos). Vacio = salidas activas
+    export let targetOutputIds: string[] | null = null
 
     let failed = false
     $: if (thumbnail && !thumbnailPath && !loadFullImage) getThumbnail()
@@ -117,11 +119,13 @@
             wait = false
         }, 800)
 
-        const activeOutputs = getAllActiveOutputs()
+        const hasTargets = !!targetOutputIds?.length
+        const activeOutputs = hasTargets ? getAllNormalOutputs().filter((a) => targetOutputIds!.includes(a.id)) : getAllActiveOutputs()
 
         const isActive = activeOutputs.some((a) => (a.out?.background?.path || a.out?.background?.id) === path)
         if (isActive) {
-            clearBackground()
+            if (hasTargets) activeOutputs.forEach((a) => clearBackground(a.id))
+            else clearBackground()
             return
         }
 

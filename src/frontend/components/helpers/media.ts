@@ -412,7 +412,8 @@ export function getMediaStyle(mediaObj: MediaStyle | undefined, currentStyle: St
         softLoop: 0,
         videoType: "",
         cropping: {},
-        style: ""
+        style: "",
+        placement: undefined
     }
 
     if (!mediaObj && !currentStyle) return mediaStyle

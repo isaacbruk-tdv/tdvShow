@@ -4,6 +4,7 @@
     import { media } from "../../stores"
     import { getCropState } from "../helpers/cropping"
     import { getMediaStyle } from "../helpers/media"
+    import { getMediaTransform } from "../helpers/mediaPlacement"
 
     export let id: string
     export let groupId: string
@@ -36,7 +37,7 @@
 
     $: mediaStyle = getMediaStyle($media[id], undefined)
     $: cropState = getCropState(mediaStyle.cropping, false, mediaStyle.style)
-    $: cameraStyleString = `${cropState.mediaCropGeometry}object-fit: ${cropState.cropHasValues ? (mediaStyle.fit === "cover" ? "cover" : "fill") : (mediaStyle.fit || "contain")};filter: ${mediaStyle.filter};transform: scale(${mediaStyle.flipped ? "-1" : "1"}, ${mediaStyle.flippedY ? "-1" : "1"});`
+    $: cameraStyleString = `${cropState.mediaCropGeometry}object-fit: ${cropState.cropHasValues ? (mediaStyle.fit === "cover" ? "cover" : "fill") : (mediaStyle.fit || "contain")};filter: ${mediaStyle.filter};transform: ${getMediaTransform(mediaStyle)};`
 </script>
 
 <div class="mediaContainer" style={cropState.mediaContainerStyle}>

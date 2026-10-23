@@ -6,6 +6,7 @@
     import type { OutData } from "../../../types/Output"
     import type { Styles } from "../../../types/Settings"
     import type { AnimationData, Item, LayoutRef, OutBackground, OutScene, OutSlide, Slide, SlideData, Template, Overlays as TOverlays, Transition } from "../../../types/Show"
+    import TestPattern from "./mapping/TestPattern.svelte"
     import { allOutputs, colorbars, currentWindow, drawSettings, drawTool, effects, media, outputs, overlays, showsCache, styles, templates, transitionData } from "../../stores"
     import { wait } from "../../utils/common"
     import { custom } from "../../utils/transitions"
@@ -405,6 +406,11 @@
     <!-- colorbars for testing -->
     {#if $colorbars[outputId]}
         <Image path="./assets/{$colorbars[outputId]}" mediaStyle={{ rendering: "pixelated", fit: "fill" }} />
+    {/if}
+
+    <!-- patron de prueba para mapeo (tambien se ve en la vista previa) -->
+    {#if currentOutput?.mapping?.testPattern}
+        <TestPattern name={currentOutput.name || ""} color={currentOutput.color || ""} width={currentOutput.bounds?.width || resolution?.width} height={currentOutput.bounds?.height || resolution?.height} logo={currentOutput.mapping.logo || ""} label={currentOutput.mapping.label || ""} />
     {/if}
 
     <!-- effects -->

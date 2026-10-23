@@ -18,6 +18,9 @@ import ChooseChord from "../components/main/popups/ChooseChord.svelte"
 import ChooseMediaInput from "../components/main/popups/ChooseMediaInput.svelte"
 import ChooseOutput from "../components/main/popups/ChooseOutput.svelte"
 import ChooseScreen from "../components/main/popups/ChooseScreen.svelte"
+import Envios from "../components/main/popups/Envios.svelte"
+import ShowManager from "../components/main/popups/ShowManager.svelte"
+import Sessions from "../components/main/popups/Sessions.svelte"
 import ChooseStyle from "../components/main/popups/ChooseStyle.svelte"
 import ChurchAppsSyncCategories from "../components/main/popups/ChurchAppsSyncCategories.svelte"
 import CleaningUtility from "../components/main/popups/CleaningUtility.svelte"
@@ -142,6 +145,9 @@ export const popups: { [key in Popups]: ComponentType } = {
     edit_event: EditEvent,
     edit_chart: EditChart,
     choose_screen: ChooseScreen,
+    envios: Envios,
+    show_manager: ShowManager,
+    sessions: Sessions,
     choose_output_input: ChooseOutput,
     choose_output_type: OutputSetup,
     choose_style: ChooseStyle,

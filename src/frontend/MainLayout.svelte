@@ -15,6 +15,14 @@
     import StageLayouts from "./components/stage/StageLayouts.svelte"
     import Resizeable from "./components/system/Resizeable.svelte"
     import Timeline from "./components/timeline/Timeline.svelte"
+    import BackgroundStrip from "./components/backgrounds/BackgroundStrip.svelte"
+    import AudioPanel from "./components/layout/AudioPanel.svelte"
+    import CenterTabs from "./components/layout/CenterTabs.svelte"
+    import LibraryPanel from "./components/layout/LibraryPanel.svelte"
+    import MediaFoldersPanel from "./components/layout/MediaFoldersPanel.svelte"
+    import ScripturePanel from "./components/layout/ScripturePanel.svelte"
+    import { proCenterTab, proLayout, proProjectsCollapsed } from "./components/layout/proLayout"
+    import Icon from "./components/helpers/Icon.svelte"
     import { activeEdit, activePage, activeProfile, activeProject, activeShow, activeStage, ai, currentWindow, editMode, focusMode, loaded, os, projectView, resized, showChangeProfileMenu, showsCache, special } from "./stores"
     import { DEFAULT_WIDTH } from "./utils/common"
 
@@ -40,9 +48,22 @@
         <Resizeable id="leftPanel">
             <div class="left">
                 {#if page === "show"}
-                    {#key $activeProfile}
-                        <Projects />
-                    {/key}
+                    {#if $proLayout && !$focusMode}
+                        <div class="projectsWrap" class:collapsed={$proProjectsCollapsed}>
+                            <button class="collapseProjects" title={$proProjectsCollapsed ? "Mostrar proyectos" : "Minimizar proyectos"} aria-label={$proProjectsCollapsed ? "Mostrar proyectos" : "Minimizar proyectos"} aria-expanded={!$proProjectsCollapsed} on:click={() => proProjectsCollapsed.set(!$proProjectsCollapsed)}>
+                                <Icon id={$proProjectsCollapsed ? "arrow_down" : "arrow_up"} size={1.1} white />
+                            </button>
+                            {#key $activeProfile}
+                                <Projects />
+                            {/key}
+                        </div>
+                        <LibraryPanel fill={$proProjectsCollapsed} />
+                        <MediaFoldersPanel />
+                    {:else}
+                        {#key $activeProfile}
+                            <Projects />
+                        {/key}
+                    {/if}
                 {:else if page === "edit"}
                     <Navigation />
                 {:else if page === "stage"}
@@ -55,10 +76,16 @@
             </div>
         </Resizeable>
 
+        <div class="centerColumn">
+        {#if $proLayout && page === "show" && !$focusMode}
+            <CenterTabs />
+        {/if}
         <div class="center">
             {#if page === "show"}
                 {#if $focusMode}
                     <LazyLoad component={() => import("./components/show/focus/FocusMode.svelte")} show={$focusMode} />
+                {:else if $proLayout && $proCenterTab === "scripture"}
+                    <ScripturePanel />
                 {:else}
                     <Show />
                 {/if}
@@ -73,12 +100,21 @@
             {/if}
         </div>
 
+        <!-- franja de fondos fija (estilo ProPresenter) -->
+        {#if page === "show" && !$focusMode && $loaded}
+            <BackgroundStrip />
+        {/if}
+        </div>
+
         <Resizeable id="rightPanel" let:width side="right">
             <div class="right" class:row={width > DEFAULT_WIDTH * 1.8}>
                 <Preview />
                 {#if page === "show"}
                     {#if $activeShow && ($activeShow.type === "show" || $activeShow.type === undefined) && !$focusMode}
                         <ShowTools />
+                    {/if}
+                    {#if $proLayout && !$focusMode}
+                        <AudioPanel />
                     {/if}
                 {:else if page === "edit"}
                     {#if $activeEdit.type === "media" || $activeEdit.type === "camera"}
@@ -148,10 +184,52 @@
         overflow: hidden;
     }
 
+    .projectsWrap {
+        position: relative;
+        flex: 1;
+        display: flex;
+        flex-direction: column;
+        min-height: 0;
+        overflow: hidden;
+    }
+    .projectsWrap.collapsed {
+        flex: 0 0 38px;
+    }
+    .collapseProjects {
+        position: absolute;
+        top: 6px;
+        right: 34px;
+        z-index: 300;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        width: 28px;
+        height: 28px;
+        padding: 0;
+        border: none;
+        border-radius: 5px;
+        background-color: var(--primary-darkest);
+        cursor: pointer;
+        opacity: 0.85;
+    }
+    .collapseProjects:hover {
+        background-color: var(--hover);
+        opacity: 1;
+    }
+
+    .centerColumn {
+        flex: 1;
+        display: flex;
+        flex-direction: column;
+        min-width: 0;
+        overflow: hidden;
+    }
+
     .center {
         position: relative;
 
         flex: 1;
+        min-height: 0;
         background-color: var(--primary-darker);
         overflow: auto;
 

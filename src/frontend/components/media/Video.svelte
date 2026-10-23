@@ -3,6 +3,7 @@
     import type { MediaStyle } from "../../../types/Main"
     import { currentWindow, media, playingVideoState } from "../../stores"
     import { enableSubtitle, encodeFilePath, isVideoSupported } from "../helpers/media"
+    import { getMediaTransform } from "../helpers/mediaPlacement"
     import { SoftLoopSync } from "./video/softLoop"
     import { clampPlaybackRate, syncVideoToAudio, videoSync } from "./video/videoSync"
 
@@ -195,7 +196,7 @@
         }, 20)
     }
 
-    $: mediaStyleString = `width: 100%;height: 100%;object-fit: ${mediaStyle.fit === "blur" ? "contain" : mediaStyle.fit || "contain"};filter: ${mediaStyle.filter || ""};transform: scale(${mediaStyle.flipped ? "-1" : "1"}, ${mediaStyle.flippedY ? "-1" : "1"});mix-blend-mode: ${mediaStyle.blend || "normal"};`
+    $: mediaStyleString = `width: 100%;height: 100%;object-fit: ${mediaStyle.fit === "blur" ? "contain" : mediaStyle.fit || "contain"};filter: ${mediaStyle.filter || ""};transform: ${getMediaTransform(mediaStyle)};mix-blend-mode: ${mediaStyle.blend || "normal"};`
     $: mediaStyleBlurString = `position: absolute;filter: ${mediaStyle.filter || ""} blur(${mediaStyle.fitOptions?.blurAmount ?? 6}px) opacity(${mediaStyle.fitOptions?.blurOpacity || 0.3});object-fit: cover;width: 100%;height: 100%;transform: scale(${mediaStyle.flipped ? "-1" : "1"}, ${mediaStyle.flippedY ? "-1" : "1"});`
 
     let blurVideo: HTMLVideoElement | null = null

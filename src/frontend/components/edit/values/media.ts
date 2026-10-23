@@ -14,6 +14,17 @@ function getCroppingRows() {
     ])
 }
 
+function getPlacementRows() {
+    return splitIntoRows([
+        { id: "placement.scale", type: "number", value: 100, values: { label: "Escala %", min: 1, max: 1000, defaultValue: 100, showSlider: true, sliderValues: { min: 10, max: 300 } } },
+        { id: "placement.width", type: "number", value: 100, values: { label: "Ancho %", min: 1, max: 1000, defaultValue: 100, showSlider: true, sliderValues: { min: 10, max: 300 } } },
+        { id: "placement.height", type: "number", value: 100, values: { label: "Alto %", min: 1, max: 1000, defaultValue: 100, showSlider: true, sliderValues: { min: 10, max: 300 } } },
+        { id: "placement.x", type: "number", value: 0, values: { label: "Posición X %", min: -200, max: 200, defaultValue: 0, showSlider: true, sliderValues: { min: -100, max: 100 } } },
+        { id: "placement.y", type: "number", value: 0, values: { label: "Posición Y %", min: -200, max: 200, defaultValue: 0, showSlider: true, sliderValues: { min: -100, max: 100 } } },
+        { id: "placement.rotation", type: "number", value: 0, values: { label: "Rotación °", min: -360, max: 360, defaultValue: 0, showSlider: true, sliderValues: { min: -180, max: 180 } } }
+    ])
+}
+
 const defaultMedia = splitIntoRows([
     {
         id: "videoType", // can be image as well
@@ -41,6 +52,10 @@ export const mediaBoxes: { [key in MediaType]?: BoxContent2 } = {
             default: {
                 inputs: defaultMedia
             },
+            placement: {
+                name: "Escalado y posición",
+                inputs: getPlacementRows()
+            },
             video: {
                 alwaysOpen: true,
                 inputs: splitIntoRows([
@@ -61,6 +76,10 @@ export const mediaBoxes: { [key in MediaType]?: BoxContent2 } = {
             default: {
                 inputs: defaultMedia
             },
+            placement: {
+                name: "Escalado y posición",
+                inputs: getPlacementRows()
+            },
             cropping: {
                 inputs: getCroppingRows()
             }
@@ -75,6 +94,10 @@ export const mediaBoxes: { [key in MediaType]?: BoxContent2 } = {
                     { id: "flipped", type: "checkbox", value: false, values: { label: "media.flip_horizontally" } },
                     { id: "flippedY", type: "checkbox", value: false, values: { label: "media.flip_vertically" } }
                 ])
+            },
+            placement: {
+                name: "Escalado y posición",
+                inputs: getPlacementRows()
             },
             cropping: {
                 inputs: getCroppingRows()

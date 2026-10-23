@@ -17,6 +17,7 @@ export interface Output {
     boundsLocked?: boolean
     cropping?: Cropping
     blending?: { left: number; right: number; rotate: number; opacity: number; centered: boolean; offset: number }
+    mapping?: OutputMapping
     screen: string | null
     alwaysOnTop?: boolean
     transparent?: boolean
@@ -36,6 +37,16 @@ export interface Output {
     style?: string
     show?: any
     out?: OutData
+}
+
+// Mapeo de salida (esquinas) y patron de prueba
+export interface OutputMapping {
+    enabled?: boolean
+    // 4 esquinas normalizadas (0-1): sup. izq., sup. der., inf. der., inf. izq.
+    corners?: { x: number; y: number }[]
+    testPattern?: boolean
+    logo?: string
+    label?: string
 }
 
 export interface SyncedOutputs {

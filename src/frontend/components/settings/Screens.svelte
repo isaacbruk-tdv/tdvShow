@@ -16,6 +16,7 @@
     import MaterialRadialPicker from "../inputs/MaterialRadialPicker.svelte"
     import MaterialToggleSwitch from "../inputs/MaterialToggleSwitch.svelte"
     import Tip from "../main/Tip.svelte"
+    import OutputMappingEditor from "../output/mapping/OutputMappingEditor.svelte"
 
     export let activateOutput = false
 
@@ -156,6 +157,7 @@
     }
 
     let editCropping = false
+    let editMapping = false
     const previewSize = 0.08
     // get any style cropping if not set on window
     $: cropping = clone((currentScreen.cropping === undefined && currentScreen.style ? $styles[currentScreen.style]?.cropping : currentScreen.cropping) || {})
@@ -204,10 +206,14 @@
     $: isEdgeBlending = blending.left || blending.right
 
     let showMore = false
-    $: showMore = isCropped || isEdgeBlending
+    $: showMore = isCropped || isEdgeBlending || !!currentScreen.mapping?.enabled || !!currentScreen.mapping?.testPattern
 </script>
 
-{#if editCropping}
+{#if editMapping && screenId}
+    <MaterialButton class="popup-back" icon="back" iconSize={1.3} title="actions.back" on:click={() => (editMapping = false)} />
+
+    <OutputMappingEditor {screenId} />
+{:else if editCropping}
     <MaterialButton class="popup-back" icon="back" iconSize={1.3} title="actions.back" on:click={() => (editCropping = false)} />
 
     <Tip value="screen.cropping_tip" bottom={20} />
@@ -268,6 +274,9 @@
             </MaterialButton>
             <MaterialButton variant="outlined" style="flex: 1;" icon="gradient" on:click={() => (editEdgeBlending = true)}>
                 <p><T id="settings.edge_blending" /></p>
+            </MaterialButton>
+            <MaterialButton variant="outlined" style="flex: 1;" icon="screen" on:click={() => (editMapping = true)}>
+                <p>Mapeo</p>
             </MaterialButton>
         </InputRow>
     {/if}

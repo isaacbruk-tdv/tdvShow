@@ -218,6 +218,7 @@ export interface MediaStyle {
     pingbackUrl?: string // URL for sending pingback after playback
     cropping?: Partial<Cropping>
     style?: string // used to transfer styles from main item to cropped part (like border radius)
+    placement?: { x?: number; y?: number; scale?: number; width?: number; height?: number; rotation?: number } // escalado y posicion
 
     ignoreLayer?: boolean // foreground background type
 }
@@ -441,6 +442,9 @@ export type Popups =
     | "edit_chart"
     | "choose_chord"
     | "choose_screen"
+    | "envios"
+    | "show_manager"
+    | "sessions"
     | "choose_media_input"
     | "choose_output_input"
     | "choose_output_type"

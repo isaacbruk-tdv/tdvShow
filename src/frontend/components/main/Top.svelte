@@ -1,5 +1,7 @@
 <script lang="ts">
     import { slide } from "svelte/transition"
+    import { activePopup, popupData, special } from "../../stores"
+    import { proLayout, toggleProLayout } from "../layout/proLayout"
     import { activeEdit, activePage, activeProfile, activeProject, activeShow, cloudUsers, dictionary, drawSettings, drawTool, os, outputDisplay, outputs, paintCache, profiles, saved, settingsTab, shows } from "../../stores"
     import { getCloudUsers } from "../../utils/cloudSync"
     import { translateText } from "../../utils/language"
@@ -112,6 +114,31 @@
         <TopButton id="stage" />
     </span>
     <span style="width: var(--navigation-width);justify-content: flex-end;">
+        <Button
+            title="Sesiones: guardar o cargar la configuración de un lugar"
+            style="padding: 0 12px;gap: 6px;max-width: 200px;"
+            on:click={() => {
+                popupData.set({ popupTitle: "Sesiones" })
+                activePopup.set("sessions")
+            }}
+        >
+            <Icon id="screen" size={1.2} white />
+            <span class="sessionName">{$special.sessions?.[$special.currentSession || ""]?.name || "Sesiones"}</span>
+        </Button>
+        <Button title={$proLayout ? "Volver al diseño clásico de FreeShow" : "Diseño estilo ProPresenter (Biblia al centro, audio a la derecha)"} style="padding: 0 16px;{$proLayout ? 'border-bottom: 2px solid var(--secondary);' : ''}" on:click={toggleProLayout}>
+            <Icon id="layout" size={1.3} white />
+        </Button>
+        <Button
+            id="envios_button"
+            title="Envíos: a dónde va cada salida"
+            style="padding: 0 18px;"
+            on:click={() => {
+                popupData.set({ popupTitle: "Envíos" })
+                activePopup.set("envios")
+            }}
+        >
+            <Icon id="send" size={1.4} white />
+        </Button>
         <TopButton id="draw" red={$drawTool === "fill" || ($drawTool === "zoom" && $drawSettings.zoom?.size !== 100) || !!($drawTool === "paint" && $paintCache?.length)} hideLabel />
         {#if !settingsDisabled}
             <TopButton id="settings" hideLabel />
@@ -200,6 +227,14 @@
         display: flex;
         justify-content: center;
         min-width: 60px;
+    }
+
+    .sessionName {
+        font-size: 0.85em;
+        white-space: nowrap;
+        overflow: hidden;
+        text-overflow: ellipsis;
+        opacity: 0.85;
     }
 
     .unsaved {

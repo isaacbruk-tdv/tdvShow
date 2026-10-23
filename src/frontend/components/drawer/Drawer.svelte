@@ -24,6 +24,7 @@
     import MaterialButton from "../inputs/MaterialButton.svelte"
     import Resizeable from "../system/Resizeable.svelte"
     import Info from "./info/Info.svelte"
+    import { PRO_HIDDEN_DRAWER_TABS, proLayout } from "../layout/proLayout"
 
     const minHeight = 40
     const topHeight = 40
@@ -272,7 +273,7 @@
         tabindex="0" -->
         <span class="tabs">
             {#each tabs as tab, i}
-                {#if $drawerTabsData[tab.id]?.enabled !== false && getAccess(tab.id).global !== "none" && (!$focusMode || !hiddenInFocusMode.includes(tab.id))}
+                {#if $drawerTabsData[tab.id]?.enabled !== false && getAccess(tab.id).global !== "none" && (!$focusMode || !hiddenInFocusMode.includes(tab.id)) && !($proLayout && PRO_HIDDEN_DRAWER_TABS.includes(tab.id))}
                     <!-- overflow: unset; -->
                     <MaterialButton id={tab.id} style="border-radius: 0;border-bottom: 2px solid var(--primary);padding: 0.2em 0.8em;" class="context #drawer_top" title="<b>{tab.name.split('.')[0]}.{tab.name.split('.')[1]}</b>{tab.title ? `\n${tab.title}` : ''} [Ctrl+{i + 1}]" isActive={activeTab === tab.id} on:click={() => openDrawerTab(tab)} on:dblclick={closeDrawer}>
                         <Icon id={tab.icon} size={1.3} white={activeTab === tab.id} />

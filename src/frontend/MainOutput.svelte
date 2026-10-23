@@ -5,6 +5,7 @@
     import type { Resolution } from "../types/Settings"
     import { getResolution } from "./components/helpers/output"
     import Output from "./components/output/Output.svelte"
+    import { getCornerPinTransform } from "./components/output/mapping/mapping"
     import { getStyleResolution } from "./components/slide/getStyleResolution"
     import StageLayout from "./components/stage/StageLayout.svelte"
     import { currentWindow, livePrepare, outputs, special, styles } from "./stores"
@@ -32,6 +33,11 @@
     }
     $: if ($currentWindow === "output") send(OUTPUT, ["MOVE"], { enabled: enableOutputMove })
 
+    // mapeo de esquinas y patron de prueba
+    $: currentMapping = $outputs[outputId]?.mapping
+    $: mappingTransform = currentMapping?.enabled ? getCornerPinTransform(currentMapping.corners, width, height) : ""
+    $: mappingStyle = mappingTransform ? `transform: ${mappingTransform};transform-origin: 0 0;` : ""
+
     // make sure it's loaded to prevent output not changing to stage output because of Svelte transition bug
     let loaded = false
     onMount(() => {
@@ -43,7 +49,7 @@
 
 <div
     class="fill context #output_window"
-    style="flex-direction: {getStyleResolution(resolution, width, height, 'fit').includes('width') && !Object.values($outputs)[0]?.stageOutput ? 'row' : 'column'};"
+    style="flex-direction: {getStyleResolution(resolution, width, height, 'fit').includes('width') && !Object.values($outputs)[0]?.stageOutput ? 'row' : 'column'};{mappingStyle}"
     class:hideCursor={$special.hideCursor}
     on:mousemove={mousemoveOutput}
     bind:offsetWidth={width}
@@ -92,6 +98,7 @@
     }
 
     .fill {
+        position: relative;
         height: 100%;
         width: 100%;
         overflow: hidden;
